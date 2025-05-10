@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: repository-karpenter
+  namespace: argocd
+type: Opaque
+data:
+  enableOCI: "true"
+  name: karpenter
+  type: helm
+  url: public.ecr.aws/karpenter
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: repository-ecr-demo
+  namespace: argocd
+type: Opaque
+data:
+  enableOCI: "true"
+  user: "xxx"
+  password: "xxx"  
+  type: helm
+  url: 1234567890909.dkr.ecr.ap-southeast-1.amazonaws.com/charts
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: repository-kro
+  namespace: argocd
+type: Opaque
+data:
+  enableOCI: "true"
+  name: kro
+  type: helm
+  url: ghcr.io/kro-run/kro
