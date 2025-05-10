@@ -62,3 +62,19 @@ In order to more advanced ( read: realistic ) cluster configurations, we are usi
 This setup is ideal for testing multi-zone, multi-role scheduling, ingress controller scenarios, and simulating production-like taints/labels in a local Kind cluster.
 
 </details>
+
+## Running the custom stacks 
+
+```bash
+idpbuilder create --kind-config custom-cluster.yaml
+
+idpbuilder create --name 001 --kind-config simple-cluster.yml  -p ./custom/kro -l debug  
+
+idpbuilder create --name 001 --kind-config simple-cluster.yml -c argocd:./override.argocd-cm.yaml
+
+idpbuilder create --name 004 --kind-config simple-cluster.yml -c argocd:./override.argocd-cm.yaml -p ./custom/kro -l debug
+
+
+```
+
+
