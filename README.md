@@ -4,6 +4,21 @@
 
 Custom set of configuration/stacks for CNOE idpbuilder
 
+## Using the custom stacks
+
+### Referencing the custom stacks
+
+As some of the references require OCI repositories there is file prepared by us for that that enables OCI repositories for custom stacks we included. 
+
+> File name is `override.argocd-cm.yaml` and it is located in the root of the repository.You will need to reference it when creating the stack.
+
+```bash
+idpbuilder create \
+  -p https://github.com/raftechio/cnoe-stacks-custom/custom/kro \
+  -c argocd:./override.argocd-cm.yaml
+```
+
+
 ## Custom clusters
 
 In order to more advanced ( read: realistic ) cluster configurations, we are using custom cluster configuration. Below you may find the outlines of our configurations
@@ -63,18 +78,6 @@ This setup is ideal for testing multi-zone, multi-role scheduling, ingress contr
 
 </details>
 
-## Running the custom stacks 
 
-```bash
-idpbuilder create --kind-config custom-cluster.yaml
-
-idpbuilder create --name 001 --kind-config simple-cluster.yml  -p ./custom/kro -l debug  
-
-idpbuilder create --name 001 --kind-config simple-cluster.yml -c argocd:./override.argocd-cm.yaml
-
-idpbuilder create --name 004 --kind-config simple-cluster.yml -c argocd:./override.argocd-cm.yaml -p ./custom/kro -l debug
-
-
-```
 
 
