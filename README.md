@@ -18,6 +18,12 @@ idpbuilder create \
   -c argocd:./override.argocd-cm.yaml
 ```
 
+### Referencing the custom cluster configuration
+As the idpbuilder supports referencing the kind config from a remote source, we can use the following command to create the stack with a more complex configuration.
+
+```bash
+idpbuilder create --kind-config https://github.com/raftechio/cnoe-stacks-custom/blob/main/custom-cluster.yaml 
+```
 
 ## Custom clusters
 
