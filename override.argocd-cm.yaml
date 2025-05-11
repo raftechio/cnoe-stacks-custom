@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+data:
+  repositories: |
+    - name: aws-public-ecr
+      type: helm
+      url: public.ecr.aws
+      enableOCI: true
+    - name: kro
+      type: helm
+      url: ghcr.io/kro-run/kro
+      enableOCI: true
+    - name: dummy-ecr-oci
+      type: helm
+      url: 1234567890909.dkr.ecr.ap-southeast-1.amazonaws.com/charts
+      user: "foo"
+      password: "bar"       
+      enableOCI: true
+  application.resourceTrackingMethod: annotation
+  resource.exclusions: |
+    - kinds:
+        - ProviderConfigUsage
+      apiGroups:
+        - "*"
+  timeout.reconciliation: 60s
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm

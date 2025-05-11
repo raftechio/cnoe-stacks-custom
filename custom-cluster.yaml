@@ -1,0 +1,160 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+name: idpbuilder
+kubeadmConfigPatches:
+- |-
+  kind: ClusterConfiguration
+  # configure controller-manager bind address
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0 #Disable localhost binding
+  # configure etcd metrics listen address
+  etcd:
+    local:
+      extraArgs:
+        listen-metrics-urls: http://0.0.0.0:2381
+  # configure scheduler bind address
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0  #Disable localhost binding
+- |-
+  kind: KubeProxyConfiguration
+  # configure proxy metrics bind address
+  metricsBindAddress: 0.0.0.0
+nodes:
+- role: control-plane
+  labels:
+    ingress-ready: "true"
+  extraPortMappings:
+  - containerPort: 443
+    hostPort: 8443
+    protocol: TCP
+  - containerPort: 32222
+    hostPort: 32222
+    protocol: TCP
+
+# ------------------------- ingress external -------------------------
+- role: worker
+  extraPortMappings:
+  - containerPort: 30080
+    hostPort: 88
+    protocol: TCP
+  - containerPort: 30443
+    hostPort: 444
+    protocol: TCP
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=gateway:NoSchedule,scheduler.example.com/gateway-controller=nginx:NoSchedule,networking.example.com/gateway-controller-type=external:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=ondemand,scheduler.example.com/node-category=gateway,scheduler.example.com/gateway-controller=nginx,networking.example.com/gateway-controller-type=external,topology.kubernetes.io/zone=eu-west-1a"
+
+
+# ------------------------- ingress internal -------------------------
+- role: worker
+  extraPortMappings:
+  - containerPort: 30080
+    hostPort: 89
+    protocol: TCP
+  - containerPort: 30443
+    hostPort: 445
+    protocol: TCP
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=gateway:NoSchedule,scheduler.example.com/gateway-controller=nginx:NoSchedule,networking.example.com/gateway-controller-type=internal:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=ondemand,scheduler.example.com/node-category=gateway,scheduler.example.com/gateway-controller=nginx,networking.example.com/gateway-controller-type=internal,topology.kubernetes.io/zone=eu-west-1b"
+
+
+# ------------------------- workers core -------------------------
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.example.com/node-type=ondemand,scheduler.example.com/node-category=core,topology.kubernetes.io/zone=eu-west-1a"
+
+# ------------------------- workers ondemand -------------------------
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=apps:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=ondemand,scheduler.example.com/node-category=apps,topology.kubernetes.io/zone=eu-west-1a"
+
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=apps:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=ondemand,scheduler.example.com/node-category=apps,topology.kubernetes.io/zone=eu-west-1b"
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=apps:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=ondemand,scheduler.example.com/node-category=apps,topology.kubernetes.io/zone=eu-west-1c"
+
+# ------------------------- workers spots -------------------------
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=apps:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=spot,scheduler.example.com/node-category=apps,topology.kubernetes.io/zone=eu-west-1c"
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=preview:NoSchedule,scheduler.example.com/node-type=spot:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=spot,scheduler.example.com/node-category=preview,topology.kubernetes.io/zone=eu-west-1a"
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=preview:NoSchedule,scheduler.example.com/node-type=spot:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=spot,scheduler.example.com/node-category=preview,topology.kubernetes.io/zone=eu-west-1b"          
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          register-with-taints: "scheduler.example.com/node-category=preview:NoSchedule,scheduler.example.com/node-type=spot:NoSchedule"
+          node-labels: "scheduler.example.com/node-type=spot,scheduler.example.com/node-category=preview,topology.kubernetes.io/zone=eu-west-1c"                    
+
+# Labels:
+#   scheduler.example.com/node-category: gateway
+#   scheduler.example.com/gateway-controller: nginx
+#   networking.example.com/gateway-controller-type: internal | external
+
+# Taints:
+#   scheduler.example.com/gateway-controller: nginx:NoSchedule
+#   networking.example.com/gateway-controller-type: external:NoSchedule
+
+
+
+

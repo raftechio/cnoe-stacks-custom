@@ -1,0 +1,31 @@
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: kro
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: kro
+    repoURL: ghcr.io/kro-run/kro
+    targetRevision: 0.2.3  
+    helm:
+      releaseName: kro
+      # valuesObject:
+      #     kyverno.fullname: kyverno
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kro
+  syncPolicy:
+    syncOptions:
+    - Replace=true
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
+    retry:
+      limit: 30
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
