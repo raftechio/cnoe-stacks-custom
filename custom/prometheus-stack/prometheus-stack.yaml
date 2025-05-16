@@ -1,0 +1,34 @@
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: prometheus-stack
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 72.4.0
+    helm:
+      releaseName: prometheus-stack
+      valueFiles:
+      - $values/value-files/values.yaml
+  - repoURL: cnoe://repository-data
+    ref: values
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: prometheus-stack
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - PruneLast=true
+    automated:
+      selfHeal: true
+      prune: true
+    retry:
+      limit: 30
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
