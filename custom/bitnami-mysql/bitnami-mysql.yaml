@@ -1,0 +1,40 @@
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: bitnami-mysql
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: registry-1.docker.io/bitnamicharts
+    chart: mysql 
+    targetRevision: 13.0.0
+    helm:
+      releaseName: mysql
+      valueFiles:
+      - $values/value-files/values.yaml
+  - repoURL: cnoe://repository-data
+    ref: values
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: db-mysql
+  syncPolicy:
+    syncOptions:
+    - Replace=true
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
+    retry:
+      limit: 30
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+
+
+
+
+
+  source:
+
