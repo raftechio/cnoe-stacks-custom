@@ -5,14 +5,16 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
+  sources:
+  - repoURL: 'ghcr.io/kro-run/kro'
     chart: kro
-    repoURL: ghcr.io/kro-run/kro
     targetRevision: 0.2.3  
     helm:
       releaseName: kro
-      # valuesObject:
-      #     kyverno.fullname: kyverno
+      valueFiles:
+      - $values/value-files/values.yaml
+  - repoURL: cnoe://repository-data
+    ref: values
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kro
