@@ -11,7 +11,8 @@ rbac:
   #                kro users to extend kro's permissions.
   # Recommended setting is aggregation, but unrestricted remains the default for
   # backwards compatibility.
-  mode: aggregation
+  #NOTE: This should NOT be done in production environment.
+  mode: unrestricted 
 
 
 deployment:
@@ -100,7 +101,7 @@ metrics:
     port: 8080
   serviceMonitor:
     # -- Whether to create a ServiceMonitor
-    enabled: false
+    enabled: true
     # -- Set of labels to transfer from the Kubernetes Service onto the target
     additionalLabels: {}
     # -- Set how frequently Prometheus should scrape

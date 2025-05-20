@@ -42,7 +42,7 @@ grafana:
 
   ## ForceDeployDashboard Create dashboard configmap even if grafana deployment has been disabled
   ##
-  forceDeployDashboards: false
+  forceDeployDashboards: true
 
   ## Deploy default dashboards
   ##
@@ -75,7 +75,7 @@ grafana:
   operator:
     ## Enable references to ConfigMaps containing dashboards in GrafanaDashboard CRs
     ## Set to true to allow dashboards to be loaded from ConfigMap references
-    dashboardsConfigMapRefEnabled: true
+    dashboardsConfigMapRefEnabled: false
 
     ## Annotations for GrafanaDashboard Cr
     ##
@@ -139,7 +139,7 @@ grafana:
     #   - grafana.domain.com
     hosts:
       - grafana.cnoe.localtest.me
-      
+
     ## Path for grafana ingress
     path: /
 

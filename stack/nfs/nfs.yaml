@@ -1,23 +1,17 @@
 kind: Application
 apiVersion: argoproj.io/v1alpha1
 metadata:
-  name: kro
+  name: nfs
   namespace: argocd
 spec:
   project: default
   sources:
-  - repoURL: 'ghcr.io/kro-run/kro'
-    chart: kro
-    targetRevision: 0.2.3  
-    helm:
-      releaseName: kro
-      valueFiles:
-      - $values/value-files/values.yaml
   - repoURL: cnoe://repository-data
-    ref: values
+    path: "./manifests"
+    ref: main
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: kro
+    namespace: storage
   syncPolicy:
     syncOptions:
     - Replace=true
