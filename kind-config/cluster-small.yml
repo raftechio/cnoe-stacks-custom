@@ -1,0 +1,48 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+name: idpbuilder
+kubeadmConfigPatches:
+- |-
+  kind: ClusterConfiguration
+  # configure controller-manager bind address
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0 #Disable localhost binding
+  # configure etcd metrics listen address
+  etcd:
+    local:
+      extraArgs:
+        listen-metrics-urls: http://0.0.0.0:2381
+  # configure scheduler bind address
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0  #Disable localhost binding
+- |-
+  kind: KubeProxyConfiguration
+  # configure proxy metrics bind address
+  metricsBindAddress: 0.0.0.0
+nodes:
+- role: control-plane
+  labels:
+    ingress-ready: "true"
+  extraPortMappings:
+  - containerPort: 443
+    hostPort: 8443
+    protocol: TCP
+  - containerPort: 32222
+    hostPort: 32222
+    protocol: TCP
+
+# ------------------------- ingress external -------------------------
+- role: worker
+- role: worker
+- role: worker
+  extraMounts:
+  - hostPath: /Users/rafpe/raftech/github/raftechio/cnoe-stacks-custom/shared-data
+    containerPath: /mnt/shared-data
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:       
+          node-labels: "scheduler.raftech.com/node-category=nfs-server,topology.kubernetes.io/zone=eu-west-1a"    
