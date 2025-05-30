@@ -40,18 +40,7 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "scheduler.raftech.com/node-category=nfs-server,topology.kubernetes.io/zone=eu-west-1a"
-# ------------------------- teamcity node(s)  -------------------------
-- role: worker
-  extraMounts:
-  - hostPath: <replace-me>
-    containerPath: /mnt/teamcity-server-data
-  kubeadmConfigPatches:
-    - |
-      kind: JoinConfiguration
-      nodeRegistration:
-        kubeletExtraArgs:
-          node-labels: "scheduler.raftech.com/node-category=teamcity-server,topology.kubernetes.io/zone=eu-west-1a"
+          node-labels: "scheduler.raftech.io/node-category=nfs-server,topology.kubernetes.io/zone=eu-west-1a"
 
 # ------------------------- database node(s)  -------------------------
 - role: worker
@@ -60,24 +49,16 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "scheduler.raftech.com/node-category=database,topology.kubernetes.io/zone=eu-west-1a"
+          node-labels: "scheduler.raftech.io/node-category=database,topology.kubernetes.io/zone=eu-west-1a"
 
-# ------------------------- teamcity agent node(s)  -------------------------
+# ------------------------- worker node(s)  -------------------------
 - role: worker
   kubeadmConfigPatches:
     - |
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "scheduler.raftech.com/node-category=teamcity-agent,topology.kubernetes.io/zone=eu-west-1a"
-
-- role: worker
-  kubeadmConfigPatches:
-    - |
-      kind: JoinConfiguration
-      nodeRegistration:
-        kubeletExtraArgs:
-          node-labels: "scheduler.raftech.com/node-category=teamcity-agent,topology.kubernetes.io/zone=eu-west-1b"
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1a"
 
 - role: worker
   kubeadmConfigPatches:
@@ -85,4 +66,12 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "scheduler.raftech.com/node-category=teamcity-agent,topology.kubernetes.io/zone=eu-west-1c"                               
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1b"
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1c"                               

@@ -1,0 +1,36 @@
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: kargo
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/akuity/kargo-charts
+    chart: kargo
+    targetRevision: 1.5.1
+    helm:
+      releaseName: kargo
+      valueFiles:
+      - $values/value-files/values.yaml
+  - repoURL: cnoe://repository-data
+    ref: values
+  # - repoURL: cnoe://repository-data
+  #   path: "./manifests"
+  #   ref: main
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kargo
+  syncPolicy:
+    syncOptions:
+    - Replace=true
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
+    retry:
+      limit: 30
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s

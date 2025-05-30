@@ -69,7 +69,7 @@ spec:
         app: nfs-provisioner
     spec:
       nodeSelector:
-        scheduler.raftech.com/node-category: nfs-server
+        scheduler.raftech.io/node-category: nfs-server
       serviceAccount: nfs-provisioner
       containers:
         - name: nfs-provisioner

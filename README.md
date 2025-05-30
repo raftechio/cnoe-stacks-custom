@@ -33,13 +33,27 @@ idpbuilder create \
 > Example 2 - using local references of all of the packages and custom host
 
 ```bash
-idpbuilder create --name jetbrains \
+idpbuilder create --name raftech \
   -p stack/bitnami-mysql \
   -p stack/prometheus-stack \
   -p stack/kro \
   -p stack/nfs \
   -c argocd:./idpbuilder-overrides/argocd-cm.yaml \
   --kind-config=https://raw.githubusercontent.com/raftechio/cnoe-stacks-custom/refs/heads/main/kind-config/cluster-with-nfs.yml \
+  --host raftech.localtest.me \
+  --dev-password
+```
+
+> Example 3 - using local references of all of the packages and custom host
+
+```bash
+idpbuilder create --name raftech \
+  -p stack/prometheus-stack \
+  -p stack/cert-manager \
+  -p stack/argo-rollouts \
+  -p stack/kargo \
+  -c argocd:./idpbuilder-overrides/argocd-cm.yaml \
+  --kind-config=./kind-config/cluster-with-nfs.yml \
   --host raftech.localtest.me \
   --dev-password
 ```

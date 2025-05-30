@@ -45,4 +45,4 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:       
-          node-labels: "scheduler.raftech.com/node-category=nfs-server,topology.kubernetes.io/zone=eu-west-1a"    
+          node-labels: "scheduler.raftech.io/node-category=nfs-server,topology.kubernetes.io/zone=eu-west-1a"    

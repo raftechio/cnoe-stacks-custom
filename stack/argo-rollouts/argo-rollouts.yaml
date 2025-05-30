@@ -1,0 +1,28 @@
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: argo-rollouts
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: cnoe://repository-data
+    path: "./manifests"
+    ref: main
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: argo-rollouts
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - PruneLast=true
+    automated:
+      selfHeal: true
+      prune: true
+    retry:
+      limit: 30
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s

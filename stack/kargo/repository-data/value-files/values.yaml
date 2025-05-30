@@ -1,0 +1,18 @@
+api:
+  tls:
+    enabled: false
+    terminatedUpstream: true
+  host: kargo.raftech.localtest.me
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    tls:
+      enabled: false
+  adminAccount:
+    passwordHash: $2y$05$/kTBcbwwUUC2OlYYwIriDeqR9i.ys4kvjVf8rPdLts6vq8nw5jN82 #admin:admin
+    tokenSigningKey: "foobar"
+
+
+
+
+
