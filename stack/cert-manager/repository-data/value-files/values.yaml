@@ -4,7 +4,7 @@ crds:
 prometheus:
   enabled: true
   servicemonitor:
-    enabled: true
+    enabled: false
 
 topologySpreadConstraints:
 - maxSkew: 2

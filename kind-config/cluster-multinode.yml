@@ -33,16 +33,27 @@ nodes:
     hostPort: 32222
     protocol: TCP
 
-# ------------------------- ingress external -------------------------
+# ------------------------- worker node(s)  -------------------------
 - role: worker
-- role: worker
-- role: worker
-  extraMounts:
-  - hostPath: /Users/rafpe/raftech/github/raftechio/cnoe-stacks-custom/shared-data
-    containerPath: /mnt/shared-data
   kubeadmConfigPatches:
     - |
       kind: JoinConfiguration
       nodeRegistration:
-        kubeletExtraArgs:       
-          node-labels: "scheduler.raftech.io/node-category=nfs-server,topology.kubernetes.io/zone=eu-west-1a"    
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1a"
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1b"
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1c"     

@@ -75,3 +75,32 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1c"                               
+
+# ------------------------- worker node(s) GPU sim -------------------------
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1a"
+          register-with-taints: "special=nvidia:NoSchedule"          
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1b"
+          register-with-taints: "special=nvidia:NoSchedule"          
+
+- role: worker
+  kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "scheduler.raftech.io/node-category=worker,topology.kubernetes.io/zone=eu-west-1c" 
+          register-with-taints: "special=nvidia:NoSchedule"            
+
